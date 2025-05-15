@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saved Meals & Workouts</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #764ba2;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    nav a {
+      text-decoration: none;
+      font-weight: 600;
+      color: #764ba2;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: 2px solid #764ba2;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #764ba2;
+      color: white;
+    }
+
+    section h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    li:hover {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Saved Meals & Workouts</h1>
+    <nav>
+      <a href="index.html">Back to Tracker</a>
+    </nav>
+
+    <section>
+      <h2>Meals (click to delete)</h2>
+      <ul id="meals-list"></ul>
+    </section>
+
+    <section>
+      <h2>Workouts (click to delete)</h2>
+      <ul id="workouts-list"></ul>
+    </section>
+  </div>
+
+  <script>
+    const MEALS_KEY = 'fitness_meals';
+    const WORKOUTS_KEY = 'fitness_workouts';
+
+    function loadSavedItems() {
+      const meals = JSON.parse(localStorage.getItem(MEALS_KEY)) || [];
+      const workouts = JSON.parse(localStorage.getItem(WORKOUTS_KEY)) || [];
+
+      const mealsList = document.getElementById('meals-list');
+      const workoutsList = document.getElementById('workouts-list');
+
+      mealsList.innerHTML = '';
+      meals.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.meal}: ${item.calories} calories`;
+        li.addEventListener('click', () => {
+          meals.splice(index, 1);
+          localStorage.setItem(MEALS_KEY, JSON.stringify(meals));
+          loadSavedItems();
+        });
+        mealsList.appendChild(li);
+      });
+
+      workoutsList.innerHTML = '';
+      workouts.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.workoutName}: ${item.exercises}`;
+        li.addEventListener('click', () => {
+          workouts.splice(index, 1);
+          localStorage.setItem(WORKOUTS_KEY, JSON.stringify(workouts));
+          loadSavedItems();
+        });
+        workoutsList.appendChild(li);
+      });
+    }
+
+    window.onload = loadSavedItems;
+  </script>
+</body>
+</html>
